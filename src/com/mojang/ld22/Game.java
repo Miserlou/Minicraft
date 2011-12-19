@@ -169,34 +169,30 @@ public class Game extends Canvas implements Runnable {
 
 	public void tick() {
 		tickCount++;
-		if (!hasFocus()) {
-			input.releaseAll();
-		} else {
-			if (!player.removed && !hasWon) gameTime++;
+		if (!player.removed && !hasWon) gameTime++;
 
-			input.tick();
-			if (menu != null) {
-				menu.tick();
+		input.tick();
+		if (menu != null) {
+			menu.tick();
+		} else {
+			if (player.removed) {
+				playerDeadTime++;
+				if (playerDeadTime > 60) {
+					setMenu(new DeadMenu());
+				}
 			} else {
-				if (player.removed) {
-					playerDeadTime++;
-					if (playerDeadTime > 60) {
-						setMenu(new DeadMenu());
-					}
-				} else {
-					if (pendingLevelChange != 0) {
-						setMenu(new LevelTransitionMenu(pendingLevelChange));
-						pendingLevelChange = 0;
-					}
+				if (pendingLevelChange != 0) {
+					setMenu(new LevelTransitionMenu(pendingLevelChange));
+					pendingLevelChange = 0;
 				}
-				if (wonTimer > 0) {
-					if (--wonTimer == 0) {
-						setMenu(new WonMenu());
-					}
-				}
-				level.tick();
-				Tile.tickCount++;
 			}
+			if (wonTimer > 0) {
+				if (--wonTimer == 0) {
+					setMenu(new WonMenu());
+				}
+			}
+			level.tick();
+			Tile.tickCount++;
 		}
 	}
 
@@ -214,7 +210,6 @@ public class Game extends Canvas implements Runnable {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
-			requestFocus();
 			return;
 		}
 
@@ -242,8 +237,6 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		renderGui();
-
-		if (!hasFocus()) renderFocusNagger();
 
 		for (int y = 0; y < screen.h; y++) {
 			for (int x = 0; x < screen.w; x++) {
@@ -295,33 +288,6 @@ public class Game extends Canvas implements Runnable {
 
 		if (menu != null) {
 			menu.render(screen);
-		}
-	}
-
-	private void renderFocusNagger() {
-		String msg = "Click to focus!";
-		int xx = (WIDTH - msg.length() * 8) / 2;
-		int yy = (HEIGHT - 8) / 2;
-		int w = msg.length();
-		int h = 1;
-
-		screen.render(xx - 8, yy - 8, 0 + 13 * 32, Color.get(-1, 1, 5, 445), 0);
-		screen.render(xx + w * 8, yy - 8, 0 + 13 * 32, Color.get(-1, 1, 5, 445), 1);
-		screen.render(xx - 8, yy + 8, 0 + 13 * 32, Color.get(-1, 1, 5, 445), 2);
-		screen.render(xx + w * 8, yy + 8, 0 + 13 * 32, Color.get(-1, 1, 5, 445), 3);
-		for (int x = 0; x < w; x++) {
-			screen.render(xx + x * 8, yy - 8, 1 + 13 * 32, Color.get(-1, 1, 5, 445), 0);
-			screen.render(xx + x * 8, yy + 8, 1 + 13 * 32, Color.get(-1, 1, 5, 445), 2);
-		}
-		for (int y = 0; y < h; y++) {
-			screen.render(xx - 8, yy + y * 8, 2 + 13 * 32, Color.get(-1, 1, 5, 445), 0);
-			screen.render(xx + w * 8, yy + y * 8, 2 + 13 * 32, Color.get(-1, 1, 5, 445), 1);
-		}
-
-		if ((tickCount / 20) % 2 == 0) {
-			Font.draw(msg, screen, xx, yy, Color.get(5, 333, 333, 333));
-		} else {
-			Font.draw(msg, screen, xx, yy, Color.get(5, 555, 555, 555));
 		}
 	}
 
