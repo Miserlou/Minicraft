@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package ioo.gun.;
+package io.gun.minicraft;
 
 public final class R {
     public static final class attr {
@@ -14,6 +14,9 @@ public final class R {
         public static final int icon=0x7f020000;
         public static final int icons=0x7f020001;
         public static final int icons2=0x7f020002;
+    }
+    public static final class id {
+        public static final int gamesurface=0x7f060000;
     }
     public static final class layout {
         public static final int main=0x7f030000;

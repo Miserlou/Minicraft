@@ -1,17 +1,9 @@
 package com.mojang.ld22;
 
-import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import android.graphics.Bitmap;
 
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
@@ -26,7 +18,7 @@ import com.mojang.ld22.screen.Menu;
 import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
 
-public class Game extends Canvas implements Runnable {
+public class Game implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Random random = new Random();
 	public static final String NAME = "Minicraft";
@@ -34,8 +26,8 @@ public class Game extends Canvas implements Runnable {
 	public static final int WIDTH = 160;
 	private static final int SCALE = 3;
 
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+	private Bitmap image;// = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels ;//= ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
@@ -114,12 +106,12 @@ public class Game extends Canvas implements Runnable {
 				}
 			}
 		}
-		try {
-			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
-			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+////			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
+////			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		resetGame();
 		setMenu(new TitleMenu());
@@ -207,11 +199,6 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void render() {
-		BufferStrategy bs = getBufferStrategy();
-		if (bs == null) {
-			createBufferStrategy(3);
-			return;
-		}
 
 		int xScroll = player.x - screen.w / 2;
 		int yScroll = player.y - (screen.h - 8) / 2;
@@ -245,16 +232,16 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 
-		Graphics g = bs.getDrawGraphics();
-		g.fillRect(0, 0, getWidth(), getHeight());
-
-		int ww = WIDTH * 3;
-		int hh = HEIGHT * 3;
-		int xo = (getWidth() - ww) / 2;
-		int yo = (getHeight() - hh) / 2;
-		g.drawImage(image, xo, yo, ww, hh, null);
-		g.dispose();
-		bs.show();
+//		Graphics g = bs.getDrawGraphics();
+//		g.fillRect(0, 0, getWidth(), getHeight());
+//
+//		int ww = WIDTH * 3;
+//		int hh = HEIGHT * 3;
+//		int xo = (getWidth() - ww) / 2;
+//		int yo = (getHeight() - hh) / 2;
+//		g.drawImage(image, xo, yo, ww, hh, null);
+//		g.dispose();
+//		bs.show();
 	}
 
 	private void renderGui() {
@@ -295,22 +282,23 @@ public class Game extends Canvas implements Runnable {
 		pendingLevelChange = dir;
 	}
 
+	//XXX: Pillage this
 	public static void main(String[] args) {
-		Game game = new Game();
-		game.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		game.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		game.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-
-		JFrame frame = new JFrame(Game.NAME);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-		frame.add(game, BorderLayout.CENTER);
-		frame.pack();
-		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-
-		game.start();
+//		Game game = new Game();
+//		game.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+//		game.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+//		game.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+//
+//		JFrame frame = new JFrame(Game.NAME);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setLayout(new BorderLayout());
+//		frame.add(game, BorderLayout.CENTER);
+//		frame.pack();
+//		frame.setResizable(false);
+//		frame.setLocationRelativeTo(null);
+//		frame.setVisible(true);
+//
+//		game.start();
 	}
 
 	public void won() {

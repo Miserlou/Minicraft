@@ -1,9 +1,12 @@
 package com.mojang.ld22;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.text.Editable;
+import android.text.method.KeyListener;
+import android.view.KeyEvent;
+import android.view.View;
 
 public class InputHandler implements KeyListener {
 	public class Key {
@@ -55,7 +58,7 @@ public class InputHandler implements KeyListener {
 	}
 
 	public InputHandler(Game game) {
-		game.addKeyListener(this);
+//		game.addKeyListener(this);
 	}
 
 	public void keyPressed(KeyEvent ke) {
@@ -67,32 +70,63 @@ public class InputHandler implements KeyListener {
 	}
 
 	private void toggle(KeyEvent ke, boolean pressed) {
-		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD8) up.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD2) down.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD4) left.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD6) right.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_W) up.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_S) down.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_A) left.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_D) right.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_UP) up.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_DOWN) down.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_LEFT) left.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_RIGHT) right.toggle(pressed);
-
-		if (ke.getKeyCode() == KeyEvent.VK_TAB) menu.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_ALT) menu.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_ALT_GRAPH) menu.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_SPACE) attack.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_CONTROL) attack.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD0) attack.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_INSERT) attack.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_ENTER) menu.toggle(pressed);
-
-		if (ke.getKeyCode() == KeyEvent.VK_X) menu.toggle(pressed);
-		if (ke.getKeyCode() == KeyEvent.VK_C) attack.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD8) up.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD2) down.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD4) left.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD6) right.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_W) up.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_S) down.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_A) left.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_D) right.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_UP) up.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_DOWN) down.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_LEFT) left.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_RIGHT) right.toggle(pressed);
+//
+//		if (ke.getKeyCode() == KeyEvent.VK_TAB) menu.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_ALT) menu.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_ALT_GRAPH) menu.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_SPACE) attack.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_CONTROL) attack.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_NUMPAD0) attack.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_INSERT) attack.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_ENTER) menu.toggle(pressed);
+//
+//		if (ke.getKeyCode() == KeyEvent.VK_X) menu.toggle(pressed);
+//		if (ke.getKeyCode() == KeyEvent.VK_C) attack.toggle(pressed);
 	}
 
 	public void keyTyped(KeyEvent ke) {
+	}
+
+	@Override
+	public void clearMetaKeyState(View view, Editable content, int states) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getInputType() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean onKeyDown(View view, Editable text, int keyCode,
+			KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onKeyOther(View view, Editable text, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
