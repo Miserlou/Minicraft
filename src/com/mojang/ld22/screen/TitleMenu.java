@@ -14,6 +14,7 @@ public class TitleMenu extends Menu {
 	}
 
 	public void tick() {
+		
 		if (input.up.clicked) selected--;
 		if (input.down.clicked) selected++;
 

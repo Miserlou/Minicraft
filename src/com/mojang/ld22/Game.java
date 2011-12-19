@@ -6,6 +6,7 @@ import java.util.Random;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.mojang.ld22.entity.Player;
@@ -35,10 +36,12 @@ public class Game implements Runnable {
 	public SurfaceHolder surfaceHolder;
 	public GameSurface surface;
 	
+	Canvas c;
+	
 	public Context context;
 	
-	private Bitmap image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);// = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels;
+	private Bitmap image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.RGB_565);// = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = new int[(WIDTH) * (HEIGHT)];
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
@@ -74,6 +77,7 @@ public class Game implements Runnable {
 	}
 
 	public void resetGame() {
+		
 		playerDeadTime = 0;
 		wonTimer = 0;
 		gameTime = 0;
@@ -98,6 +102,8 @@ public class Game implements Runnable {
 		for (int i = 0; i < 5; i++) {
 			levels[i].trySpawn(5000);
 		}
+		
+		
 	}
 
 	private void init() {
@@ -118,6 +124,8 @@ public class Game implements Runnable {
 				}
 			}
 		}
+
+		
 		try {
 			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(BitmapFactory.decodeResource(context.getResources(), R.drawable.icons)));
 			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(BitmapFactory.decodeResource(context.getResources(), R.drawable.icons)));
@@ -136,7 +144,9 @@ public class Game implements Runnable {
 		int frames = 0;
 		int ticks = 0;
 		long lastTimer1 = System.currentTimeMillis();
-
+		
+		c = surfaceHolder.lockCanvas(null);
+        
 		init();
 
 		while (running) {
@@ -151,11 +161,11 @@ public class Game implements Runnable {
 				shouldRender = true;
 			}
 
-			try {
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				Thread.sleep(2);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 
 			if (shouldRender) {
 				frames++;
@@ -211,9 +221,6 @@ public class Game implements Runnable {
 	}
 
 	public void render() {
-		
-		System.out.println(player);
-		System.out.println(screen);
 
 		int xScroll = player.x - screen.w / 2;
 		int yScroll = player.y - (screen.h - 8) / 2;
@@ -246,7 +253,18 @@ public class Game implements Runnable {
 				if (cc < 255) pixels[x + y * WIDTH] = colors[cc];
 			}
 		}
-
+		
+//		c.drawColor(android.graphics.Color.RED);
+//		c.drawBitmap(image, 0, 0, null);
+//		surface.draw(c);
+		image.setPixels(screen.pixels, 0, WIDTH, 0, 0, WIDTH, HEIGHT);
+		surface.b = image;
+//		c.drawBitmap(image, 0, 0, null);
+//		surface.b = image;
+//		surface.draw(c);
+		surface.onDraw(c);
+		surfaceHolder.unlockCanvasAndPost(c);
+		c = surfaceHolder.lockCanvas();
 //		Graphics g = bs.getDrawGraphics();
 //		g.fillRect(0, 0, getWidth(), getHeight());
 //

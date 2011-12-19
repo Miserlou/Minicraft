@@ -21,8 +21,8 @@
     >
     <io.gun.minicraft.GameSurface
         android:id="@+id/gamesurface" 
-        android:layout_width="fill_parent"
- 		android:layout_height="fill_parent" 
+        android:layout_width="wrap_content"
+ 		android:layout_height="wrap_content" 
  		>
 	</io.gun.minicraft.GameSurface>
 </LinearLayout>
