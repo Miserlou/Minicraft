@@ -9,7 +9,7 @@ public class SpriteSheet {
 	public SpriteSheet(Bitmap image) {
 		width = image.getWidth();
 		height = image.getHeight();
-		image.getPixels(pixels, 0, 0, 0, 0, width, height);
+		image.getPixels(pixels, 0, width, 0, 0, width, height);
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = (pixels[i] & 0xff) / 64;
 		}

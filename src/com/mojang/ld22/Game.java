@@ -3,7 +3,10 @@ package com.mojang.ld22;
 import java.io.IOException;
 import java.util.Random;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.SurfaceHolder;
 
 import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
@@ -18,6 +21,9 @@ import com.mojang.ld22.screen.Menu;
 import com.mojang.ld22.screen.TitleMenu;
 import com.mojang.ld22.screen.WonMenu;
 
+import io.gun.minicraft.GameSurface;
+import io.gun.minicraft.R;
+
 public class Game implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Random random = new Random();
@@ -26,8 +32,13 @@ public class Game implements Runnable {
 	public static final int WIDTH = 160;
 	private static final int SCALE = 3;
 
-	private Bitmap image;// = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels ;//= ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+	public SurfaceHolder surfaceHolder;
+	public GameSurface surface;
+	
+	public Context context;
+	
+	private Bitmap image = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);// = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels;
 	private boolean running = false;
 	private Screen screen;
 	private Screen lightScreen;
@@ -83,6 +94,7 @@ public class Game implements Runnable {
 
 		level.add(player);
 
+		System.out.println("Spawning levels..");
 		for (int i = 0; i < 5; i++) {
 			levels[i].trySpawn(5000);
 		}
@@ -106,12 +118,12 @@ public class Game implements Runnable {
 				}
 			}
 		}
-//		try {
-////			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
-////			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(BitmapFactory.decodeResource(context.getResources(), R.drawable.icons)));
+			lightScreen = new Screen(WIDTH, HEIGHT, new SpriteSheet(BitmapFactory.decodeResource(context.getResources(), R.drawable.icons)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		resetGame();
 		setMenu(new TitleMenu());
@@ -199,6 +211,9 @@ public class Game implements Runnable {
 	}
 
 	public void render() {
+		
+		System.out.println(player);
+		System.out.println(screen);
 
 		int xScroll = player.x - screen.w / 2;
 		int yScroll = player.y - (screen.h - 8) / 2;
