@@ -65,7 +65,7 @@ public class LoadMenu extends Menu {
 	}
 	
 	public void render(Screen screen) {
-		Font.renderFrame(screen, "Load game", 14, 1, 30, 20);
+		Font.renderFrame(screen, "Load game", 1, 1, 18, 11);
 		
 		for (int i = 0; i < options.length; i++) {
 			String msg = options[i].replaceAll(".palm", "");
@@ -84,16 +84,6 @@ public class LoadMenu extends Menu {
 			}
 			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (4 + i) * 8, col);
 		}
-		int col = Color.get(-1, 500, 500, 500);
-		String msg = "Warning";
-		int i = 0;
-		Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
-		msg = "Unsaved data";
-		i = 1;
-		Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
-		msg= "will be lost!";
-		i = 2;
-		Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
 
 
 		Font.draw("(Arrow keys,X and C)", screen, 0, screen.h - 8, Color.get(0, 111, 111, 111));
