@@ -8,7 +8,7 @@ import com.mojang.ld22.sound.Sound;
 public class TitleMenu extends Menu {
 	private int selected = 0;
 
-	private static final String[] options = { "Start game", "How to play", "About" };
+	private static final String[] options = { "Start game", "How to play", "About", "Quit" };
 
 	public TitleMenu() {
 	}
@@ -29,6 +29,7 @@ public class TitleMenu extends Menu {
 			}
 			if (selected == 1) game.setMenu(new InstructionsMenu(this));
 			if (selected == 2) game.setMenu(new AboutMenu(this));
+			if (selected == 3) System.exit(0);;
 		}
 	}
 
@@ -46,7 +47,7 @@ public class TitleMenu extends Menu {
 			}
 		}
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < options.length; i++) {
 			String msg = options[i];
 			int col = Color.get(0, 222, 222, 222);
 			if (i == selected) {
