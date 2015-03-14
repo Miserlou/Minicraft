@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
@@ -20,6 +21,8 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.gfx.SpriteSheet;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
+import com.mojang.ld22.saveload.DATA;
+import com.mojang.ld22.saveload.Save;
 import com.mojang.ld22.screen.DeadMenu;
 import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
@@ -28,11 +31,16 @@ import com.mojang.ld22.screen.WonMenu;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private Random random = new Random();
-	public static final String NAME = "Minicraft";
-	public static final int HEIGHT = 120;
-	public static final int WIDTH = 160;
+	public static final String NAME = "Palm";
+	private int autosaveDelay = 7200; // 3600 is ~1min
+	private int autosaveTick = 0;
+	private String autosaveText = "";
+	public static final int HEIGHT = 220;
+	public static final int WIDTH = 360;
 	private static final int SCALE = 3;
+	private boolean startup = true;
 
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -46,8 +54,8 @@ public class Game extends Canvas implements Runnable {
 	public int gameTime = 0;
 
 	private Level level;
-	private Level[] levels = new Level[5];
-	private int currentLevel = 3;
+	public static Level[] levels = new Level[5];
+	public static int currentLevel = 3;
 	public Player player;
 
 	public Menu menu;
@@ -168,7 +176,40 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void tick() {
+		if (startup == true){
+			if (DATA.OPERATING_SYSTEM.indexOf("win") >= 0) {
+	            System.out.println("Windows detected");
+	            DATA.location = System.getenv("APPDATA") + "\\palm\\saves\\";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("mac") >= 0) {
+	            System.out.println("Mac detected");
+	            DATA.location = System.getProperty( "user.home" ) + "/palm/saves/";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("nix") >= 0 || DATA.OPERATING_SYSTEM.indexOf("nux") >= 0 || DATA.OPERATING_SYSTEM.indexOf("aix") > 0) {
+	            System.out.println("Unix or Linux detected");
+	            DATA.location = System.getProperty( "user.home" ) + "/palm/saves/";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("sunos") >= 0) {
+	            System.out.println("Solaris detected");
+	        } else {
+	            System.out.println("OS not found fallback to Windows");
+	            DATA.location = System.getenv("APPDATA") + "\\palm\\saves\\";
+	        }
+			File file = new File(DATA.location);
+			file.mkdirs();
+			System.out.println(DATA.location);
+			startup = false;
+		}
 		tickCount++;
+		autosaveTick++;
+		if(autosaveDelay <= autosaveTick){
+			System.out.println("auto saving");
+			autosaveTick = 0;
+			autosaveText = "Saved";
+			@SuppressWarnings("unused")
+			Save save = new Save("AutoSave", player);
+			System.out.println("saved");
+		}
+		if(autosaveTick >= autosaveDelay / 8){
+			autosaveText = "";
+		}
 		if (!hasFocus()) {
 			input.releaseAll();
 		} else {
@@ -271,6 +312,9 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 
+		Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length(), 2, Color.get(-1, 222, 222, 222));
+        Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length() - 1, 1, Color.get(-1, 555, 555, 555));
+        
 		for (int i = 0; i < 10; i++) {
 			if (i < player.health)
 				screen.render(i * 8, screen.h - 16, 0 + 12 * 32, Color.get(000, 200, 500, 533), 0);
@@ -299,7 +343,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void renderFocusNagger() {
-		String msg = "Click to focus!";
+		String msg = "Game Paused";
 		int xx = (WIDTH - msg.length() * 8) / 2;
 		int yy = (HEIGHT - 8) / 2;
 		int w = msg.length();
