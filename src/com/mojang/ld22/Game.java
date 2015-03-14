@@ -33,12 +33,12 @@ public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private Random random = new Random();
-	public static final String NAME = "Palm";
+	public static final String NAME = "Minicraft";
 	private int autosaveDelay = 7200; // 3600 is ~1min
 	private int autosaveTick = 0;
 	private String autosaveText = "";
-	public static final int HEIGHT = 220;
-	public static final int WIDTH = 360;
+	public static final int HEIGHT = 120;
+	public static final int WIDTH = 160;
 	private static final int SCALE = 3;
 	private boolean startup = true;
 
