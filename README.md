@@ -1,5 +1,5 @@
 # Minicraft
-## By Notch (http://notch.tumblr.com/)
+## By Notch (http://notch.tumblr.com/ - http://notch.net/)
 
 For the Ludum Dare 22 competition!
 
