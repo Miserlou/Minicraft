@@ -43,7 +43,7 @@ public class EscMenu extends Menu {
 	}
 
 	public void render(Screen screen) {
-		Font.renderFrame(screen, "Menu", 14, 1, 30, 20);
+		Font.renderFrame(screen, "Menu", 1, 1, 18, 11);
 		
 		for (int i = 0; i < options.length; i++) {
 			String msg = options[i];
@@ -53,19 +53,6 @@ public class EscMenu extends Menu {
 				col = Color.get(-1, 555, 555, 555);
 			}
 			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (4 + i) * 8, col);
-		}
-		if (selected == 2 || selected == 4 | selected == 5){
-			int col = Color.get(-1, 500, 500, 500);
-			String msg = "Warning";
-			int i = 0;
-			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
-			msg = "Unsaved data";
-			i = 1;
-			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
-			msg= "will be lost!";
-			i = 2;
-			Font.draw(msg, screen, (screen.w - msg.length() * 8) / 2, (6 + i) * 16, col);
-
 		}
 
 		Font.draw("(Arrow keys,X and C)", screen, 0, screen.h - 8, Color.get(0, 111, 111, 111));
