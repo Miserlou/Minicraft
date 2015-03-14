@@ -194,7 +194,7 @@ public class Game extends Canvas implements Runnable {
 	        }
 			File file = new File(DATA.location);
 			file.mkdirs();
-			System.out.println(DATA.location);
+            System.out.println("Save directory: " + DATA.location);
 			startup = false;
 		}
 		tickCount++;
