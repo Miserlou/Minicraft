@@ -45,7 +45,7 @@ public class SaveMenu extends Menu {
 	}
 	
 	public void render(Screen screen) {
-		Font.renderFrame(screen, "Save game", 14, 1, 30, 20);
+		Font.renderFrame(screen, "Save game", 1, 1, 18, 11);
 		
 		for (int i = 0; i < options.length; i++) {
 			String msg = options[i];
