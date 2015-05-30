@@ -16,7 +16,7 @@ public class LoadMenu extends Menu {
 	private String[] options = {"Back", "AutoSave", "1", "2", "3"};
 	private String[] saves = {"AutoSave.palm", "Save_1.palm", "Save_2.palm", "Save_3.palm"};
 	private int selected = 0;
-	String location = "/home/sven/palm/saves/";
+	String location = DATA.location;
 	String extention = ".palm";
 	private static List<String> data = new ArrayList<String>();
 	private Player player;
