@@ -29,7 +29,7 @@ public class TitleMenu extends Menu {
 			}
 			if (selected == 1) game.setMenu(new InstructionsMenu(this));
 			if (selected == 2) game.setMenu(new AboutMenu(this));
-			if (selected == 3) System.exit(0);;
+			if (selected == 3) System.exit(0);
 		}
 	}
 
