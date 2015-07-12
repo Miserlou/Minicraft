@@ -10,12 +10,15 @@ import com.mojang.ld22.item.resource.Resource;
 public class Inventory {
 	public List<Item> items = new ArrayList<Item>();
 	public static List<Item> items1 = new ArrayList<Item>();
+	public int itemCount = items.size();
+
 
 	public void add(Item item) {
 		add(items.size(), item);
 	}
 
 	public void add(int slot, Item item) {
+		itemCount = items.size();
 		if (item instanceof ResourceItem) {
 			ResourceItem toTake = (ResourceItem) item;
 			ResourceItem has = findResource(toTake.resource);
