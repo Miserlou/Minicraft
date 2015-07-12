@@ -63,6 +63,9 @@ public class Game extends Canvas implements Runnable {
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
+	
+	public static String achievementText = "";
+	private int achievementTick = 0;
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
@@ -210,6 +213,14 @@ public class Game extends Canvas implements Runnable {
 		if(autosaveTick >= autosaveDelay / 8){
 			autosaveText = "";
 		}
+		
+		if (achievementTick >= 200)
+			achievementTick = 0;
+		if (achievementText != "")
+			achievementTick++;
+		if (achievementText != "" && achievementTick >= 200)
+			achievementText = "";
+		
 		if (!hasFocus()) {
 			input.releaseAll();
 		} else {
@@ -238,6 +249,35 @@ public class Game extends Canvas implements Runnable {
 				level.tick();
 				Tile.tickCount++;
 			}
+		}
+		
+		try{ //Achievements (getting wood and gems is in Player.java touchItem() due problems)
+			for (int i = 0; i < player.inventory.itemCount+1; i++) {
+				//System.out.println(player.inventory.items.get(i).getName());
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("wood")) { //Achievement Getting wood
+					if (DATA.hasAchievements[0] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[0] = true;
+						Game.achievementText = "Getting wood";
+					}
+				}
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("wood pick")) { //Achievement Craft a pickaxe
+					if (DATA.hasAchievements[1] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[1] = true;
+						Game.achievementText = "Craft a pickaxe";
+					}
+				}
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("gem")) { //Achievement Get gems
+					if (DATA.hasAchievements[2] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[2] = true;
+						Game.achievementText = "Gems!";
+					}
+				}
+			}
+		}catch(Exception e){
+			
 		}
 	}
 
@@ -314,6 +354,12 @@ public class Game extends Canvas implements Runnable {
 
 		Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length(), 2, Color.get(-1, 222, 222, 222));
         Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length() - 1, 1, Color.get(-1, 555, 555, 555));
+        
+        if (achievementText != "") {
+	        Font.renderFrame(screen, "Achievement get!", 1, 1, 18, 4);
+	        Font.draw(achievementText, screen, 1+achievementText.length(), 22, Color.get(-1, 222, 222, 222));
+	        Font.draw(achievementText, screen, 1+achievementText.length() - 1, 21, Color.get(-1, 555, 555, 555));
+		}
         
 		for (int i = 0; i < 10; i++) {
 			if (i < player.health)
