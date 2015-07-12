@@ -25,7 +25,7 @@ import com.mojang.ld22.item.resource.Resource;
 public class DATA {
     public static String OPERATING_SYSTEM = System.getProperty("os.name").toLowerCase();
     public static String location = "";
-    public static String extention = ".palm";
+    public static String extention = ".mcsav";
     public static double version = 1.0;
 
     public static Entity getEntity(String string, Player player) {
