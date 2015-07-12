@@ -8,17 +8,17 @@ import com.mojang.ld22.entity.Player;
 import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
-import com.mojang.ld22.saveload.Load;
 import com.mojang.ld22.saveload.DATA;
+import com.mojang.ld22.saveload.Load;
 import com.mojang.ld22.sound.Sound;
 
 public class LoadMenu extends Menu {
 	private Menu parent;
 	private String[] options = {"Back", "AutoSave", "1", "2", "3"};
-	private String[] saves = {"AutoSave.palm", "Save_1.palm", "Save_2.palm", "Save_3.palm"};
+	private String[] saves = {"AutoSave.mcsav", "Save_1.mcsav", "Save_2.mcsav", "Save_3.mcsav"};
 	private int selected = 0;
 	String location = DATA.location;
-	String extention = ".palm";
+	String extention = ".mcsav";
 	private static List<String> data = new ArrayList<String>();
 	private Player player;
 
@@ -69,7 +69,7 @@ public class LoadMenu extends Menu {
 		Font.renderFrame(screen, "Load game", 1, 1, 18, 11);
 		
 		for (int i = 0; i < options.length; i++) {
-			String msg = options[i].replaceAll(".palm", "");
+			String msg = options[i].replaceAll(".mcsav", "");
 			if (i != 0){
 				msg = "Load " + msg;
 			}
