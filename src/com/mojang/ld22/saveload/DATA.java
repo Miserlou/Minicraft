@@ -159,5 +159,6 @@ public class DATA {
         gempick = (new ToolItem(ToolType.pickaxe, 4)).addItem();
         gemaxe = (new ToolItem(ToolType.axe, 4)).addItem();
     }
+    //Achievements are handled in Game.java Tick()
     public static boolean[] hasAchievements = {false, false, false};// Getting wood, Craft a pickaxe, Get gems
 }
