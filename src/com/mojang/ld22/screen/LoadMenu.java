@@ -9,6 +9,7 @@ import com.mojang.ld22.gfx.Color;
 import com.mojang.ld22.gfx.Font;
 import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.saveload.Load;
+import com.mojang.ld22.saveload.DATA;
 import com.mojang.ld22.sound.Sound;
 
 public class LoadMenu extends Menu {
