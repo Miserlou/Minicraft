@@ -179,18 +179,18 @@ public class Game extends Canvas implements Runnable {
 		if (startup == true){
 			if (DATA.OPERATING_SYSTEM.indexOf("win") >= 0) {
 	            System.out.println("Windows detected");
-	            DATA.location = System.getenv("APPDATA") + "\\palm\\saves\\";
+	            DATA.location = System.getenv("APPDATA") + "\\minicraft\\saves\\";
 	        } else if (DATA.OPERATING_SYSTEM.indexOf("mac") >= 0) {
 	            System.out.println("Mac detected");
-	            DATA.location = System.getProperty( "user.home" ) + "/palm/saves/";
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
 	        } else if (DATA.OPERATING_SYSTEM.indexOf("nix") >= 0 || DATA.OPERATING_SYSTEM.indexOf("nux") >= 0 || DATA.OPERATING_SYSTEM.indexOf("aix") > 0) {
 	            System.out.println("Unix or Linux detected");
-	            DATA.location = System.getProperty( "user.home" ) + "/palm/saves/";
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
 	        } else if (DATA.OPERATING_SYSTEM.indexOf("sunos") >= 0) {
 	            System.out.println("Solaris detected");
 	        } else {
-	            System.out.println("OS not found fallback to Windows");
-	            DATA.location = System.getenv("APPDATA") + "\\palm\\saves\\";
+	            System.out.println("OS not found fallback to Linux");
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
 	        }
 			File file = new File(DATA.location);
 			file.mkdirs();
