@@ -35,12 +35,7 @@ public class Save {
 		this.player = player;
 		File folder = new File(location);
 		folder.mkdirs();
-		data.add(player.x + "");
-		data.add(player.y + "");
-		data.add(player.health + "");
-		data.add(player.score + "");
-		//data.add(seed + "");
-		data.add(Game.currentLevel + "");
+		data.add(Game.tickCount + "");
 		
 		writeWorld();
 		writeInventory();
@@ -81,6 +76,14 @@ public class Save {
 			br.write(worlddata4.toString().replaceAll(" ", ""));
 			br.newLine();
 			br.write(entities.toString().substring(1, entities.toString().length()-1).replaceAll(" ", ""));
+			//System.out.println(entities);
+			br.newLine();
+			br.write("[");
+			for (int i = 0; i < DATA.hasAchievements.length; i++) {
+				br.write(DATA.hasAchievements[i] + ",");
+			}
+			br.write("]");
+			
 			br.flush();
 			br.close();
 		} catch (IOException e) {
@@ -183,10 +186,10 @@ public class Save {
                 Entity e = (Entity)Game.levels[l].entities.get(i);
                 String name = e.getClass().getName().replace("com.mojang.ld22.entity.", "");
                 String extradata = "";
-                //if(e instanceof Mob){
-                //    Mob m = (Mob)e;
-                //    extradata = (new StringBuilder(":")).append(m.health).append(":").append(m.maxHealth).append(":").append(m.lvl).toString();
-                //}
+                if(e instanceof Mob){
+                    Mob m = (Mob)e;
+                    extradata = (new StringBuilder(":")).append(m.health).append(":").append(m.maxHealth).append(":").append(m.lvl).toString();
+                }
                 if(e instanceof Player){
                 	Player p = (Player)e;
                 	extradata = (new StringBuilder(":")).append(p.health).append(":").append(p.maxHealth).append(":").append(p.lvl).toString();
@@ -205,7 +208,7 @@ public class Save {
                 //if (e instanceof Player){
                 	//entities.add((new StringBuilder(String.valueOf(name))).append("[").append(e.x).append(":").append(e.y).append(extradata).append(":").append(3).append("]").toString());
                 //}else if(!(e instanceof Mob)){
-                if(!(e instanceof Mob)){
+                if(!(e instanceof Mob)){ //Remove ! to save mobs too (Buggy)
                     entities.add((new StringBuilder(String.valueOf(name))).append("[").append(e.x).append(":").append(e.y).append(extradata).append(":").append(l).append("]").toString());
                 }
                 if(e instanceof Player){
