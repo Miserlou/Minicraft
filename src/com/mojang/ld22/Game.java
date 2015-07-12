@@ -50,7 +50,7 @@ public class Game extends Canvas implements Runnable {
 	private InputHandler input = new InputHandler(this);
 
 	private int[] colors = new int[256];
-	private int tickCount = 0;
+	public int tickCount = 0;
 	public int gameTime = 0;
 
 	private Level level;
