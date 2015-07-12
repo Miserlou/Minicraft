@@ -21,8 +21,6 @@ public class Load {
 	String location = DATA.location;
 	String extention = DATA.extention;
 	
-	private List<String> data = new ArrayList<String>();
-
 	private List<String> Inv = new ArrayList<String>();
 	private List<String> World0 = new ArrayList<String>();
 	private List<String> World1 = new ArrayList<String>();
@@ -35,18 +33,10 @@ public class Load {
 	
 	public Load(String world, Player player){
 		loadFromFile(location + world);
-		
-		if (data.size() >= 4){
-			player.x = Integer.parseInt(data.get(0));
-			player.y = Integer.parseInt(data.get(1));
-			player.health = Integer.parseInt(data.get(2));
-			player.score = Integer.parseInt(data.get(3));
-			Game.currentLevel = Integer.parseInt((String)data.get(4));
-			
-			loadWorld(location + world);
-			loadEntities(location + world, player);
-			loadInventory(location + world, player.inventory);
-		}
+		loadWorld(location + world);
+		loadEntities(location + world, player);
+		loadInventory(location + world, player.inventory);
+		loadAchievements(location + world, player.inventory);
 	}
 
 	@SuppressWarnings({ "resource", "static-access" })
@@ -56,15 +46,14 @@ public class Load {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String Data = br.readLine();
 			Data = br.readLine();
-			
+						
 			String[] DataSplit = Data.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
 			for (int i = 0;i < DataSplit.length;i++){
 				Inv.add(DataSplit[i]);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Could not load Inventory");
 		}
-		System.out.println(Inv.toString());
 		inv.items.clear();
 		inv.items1.clear();
 		for (int i = 0;i < Inv.size();i++){
@@ -116,7 +105,7 @@ public class Load {
 				World4.add(DataSplit_w4[i].replaceAll("\\[", "").replaceAll("\\]", ""));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Could not load World");
 		}
 		Game.levels[0].w = Integer.parseInt((String)World0.get(0));
         Game.levels[0].h = Integer.parseInt((String)World0.get(1));
@@ -165,14 +154,13 @@ public class Load {
         }
     }
 	
-	
 	@SuppressWarnings({ "resource", "unused" })
 	public void loadEntities(String filename, Player player){
 		
 		File file = new File(filename);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String Data = br.readLine(); //playerdata
+			String Data = br.readLine(); //tickcount
 			Data = br.readLine(); //inventory
 			Data = br.readLine(); //world0
 			Data = br.readLine(); //world1
@@ -182,6 +170,14 @@ public class Load {
 			Data = br.readLine(); //ENTITIES
 			
 			String[] DataSplit = Data.split(",");
+			for(int l = 0; l < Game.levels.length; l++){
+				for (int i = 0;i < entities.size();i++){
+					entities.remove(i);
+				}
+				for (int i = 0;i < Game.levels[l].entities.size();i++){
+					Game.levels[l].entities.remove(i);
+				}
+			}
 			for (int i = 0;i < DataSplit.length;i++){
 				entities.add(DataSplit[i]);
 			}
@@ -257,6 +253,31 @@ public class Load {
 
     }
 	
+	@SuppressWarnings({ "resource" })
+	private void loadAchievements(String filename, Inventory inv) {
+		File file = new File(filename);
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String Data = br.readLine(); //tickcount
+			Data = br.readLine(); //inventory
+			Data = br.readLine(); //world0
+			Data = br.readLine(); //world1
+			Data = br.readLine(); //world2
+			Data = br.readLine(); //world3
+			Data = br.readLine(); //world4
+			Data = br.readLine(); //entities
+			Data = br.readLine(); //ACHIEVEMENTS			
+			
+			//System.out.println(filename + ": " + Data + " - " + file);
+			
+			String[] DataSplit = Data.replaceAll("\\[", "").replaceAll("\\]", "").substring(0, Data.lastIndexOf(",")).split(",");
+			for (int i = 0;i < DataSplit.length;i++){
+				DATA.hasAchievements[i] = Boolean.parseBoolean(DataSplit[i]);
+			}
+		} catch (Exception e) {
+			System.err.println("Could not load Achievements");
+		}
+	}
 	
 	private void loadFromFile(String world) {
 		File file = new File(world);
@@ -265,12 +286,11 @@ public class Load {
 			String Data = br.readLine();
 			String[] DataSplit = Data.split(",");
 			for (int i = 0;i < DataSplit.length;i++){
-				data.add(DataSplit[i].replaceAll("[^0-9]", ""));
+				Game.tickCount = Integer.parseInt(DataSplit[i].replaceAll("[^0-9]", ""));
 			}
 			br.close();
 		} catch (Exception e) {
-			System.out.println("Error loading save file");
-			e.printStackTrace();
+			System.err.println("Error loading save file");
 		}
 		
 	}
