@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
@@ -20,6 +21,8 @@ import com.mojang.ld22.gfx.Screen;
 import com.mojang.ld22.gfx.SpriteSheet;
 import com.mojang.ld22.level.Level;
 import com.mojang.ld22.level.tile.Tile;
+import com.mojang.ld22.saveload.DATA;
+import com.mojang.ld22.saveload.Save;
 import com.mojang.ld22.screen.DeadMenu;
 import com.mojang.ld22.screen.LevelTransitionMenu;
 import com.mojang.ld22.screen.Menu;
@@ -28,11 +31,16 @@ import com.mojang.ld22.screen.WonMenu;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private Random random = new Random();
 	public static final String NAME = "Minicraft";
+	private int autosaveDelay = 7200; // 3600 is ~1min
+	private int autosaveTick = 0;
+	private String autosaveText = "";
 	public static final int HEIGHT = 120;
 	public static final int WIDTH = 160;
 	private static final int SCALE = 3;
+	private boolean startup = true;
 
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -42,12 +50,12 @@ public class Game extends Canvas implements Runnable {
 	private InputHandler input = new InputHandler(this);
 
 	private int[] colors = new int[256];
-	private int tickCount = 0;
+	public static int tickCount = 0;
 	public int gameTime = 0;
 
 	private Level level;
-	private Level[] levels = new Level[5];
-	private int currentLevel = 3;
+	public static Level[] levels = new Level[5];
+	public static int currentLevel = 3;
 	public Player player;
 
 	public Menu menu;
@@ -55,6 +63,9 @@ public class Game extends Canvas implements Runnable {
 	private int pendingLevelChange;
 	private int wonTimer = 0;
 	public boolean hasWon = false;
+	
+	public static String achievementText = "";
+	private int achievementTick = 0;
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
@@ -168,7 +179,48 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void tick() {
+		if (startup == true){
+			if (DATA.OPERATING_SYSTEM.indexOf("win") >= 0) {
+	            System.out.println("Windows detected");
+	            DATA.location = System.getenv("APPDATA") + "\\minicraft\\saves\\";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("mac") >= 0) {
+	            System.out.println("Mac detected");
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("nix") >= 0 || DATA.OPERATING_SYSTEM.indexOf("nux") >= 0 || DATA.OPERATING_SYSTEM.indexOf("aix") > 0) {
+	            System.out.println("Unix or Linux detected");
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
+	        } else if (DATA.OPERATING_SYSTEM.indexOf("sunos") >= 0) {
+	            System.out.println("Solaris detected");
+	        } else {
+	            System.out.println("OS not found fallback to Linux");
+	            DATA.location = System.getProperty( "user.home" ) + "/minicraft/saves/";
+	        }
+			File file = new File(DATA.location);
+			file.mkdirs();
+            System.out.println("Save directory: " + DATA.location);
+			startup = false;
+		}
 		tickCount++;
+		autosaveTick++;
+		if(autosaveDelay <= autosaveTick){
+			System.out.println("auto saving");
+			autosaveTick = 0;
+			autosaveText = "Saved";
+			@SuppressWarnings("unused")
+			Save save = new Save("AutoSave", player);
+			System.out.println("saved");
+		}
+		if(autosaveTick >= autosaveDelay / 8){
+			autosaveText = "";
+		}
+		
+		if (achievementTick >= 200)
+			achievementTick = 0;
+		if (achievementText != "")
+			achievementTick++;
+		if (achievementText != "" && achievementTick >= 200)
+			achievementText = "";
+		
 		if (!hasFocus()) {
 			input.releaseAll();
 		} else {
@@ -197,6 +249,35 @@ public class Game extends Canvas implements Runnable {
 				level.tick();
 				Tile.tickCount++;
 			}
+		}
+		
+		try{ //Achievements (getting wood and gems is in Player.java touchItem() due problems)
+			for (int i = 0; i < player.inventory.itemCount+1; i++) {
+				//System.out.println(player.inventory.items.get(i).getName());
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("wood")) { //Achievement Getting wood
+					if (DATA.hasAchievements[0] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[0] = true;
+						Game.achievementText = "Getting wood";
+					}
+				}
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("wood pick")) { //Achievement Craft a pickaxe
+					if (DATA.hasAchievements[1] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[1] = true;
+						Game.achievementText = "Craft a pickaxe";
+					}
+				}
+				if (player.inventory.items.get(i).getName().equalsIgnoreCase("gem")) { //Achievement Get gems
+					if (DATA.hasAchievements[2] == false) {
+						//System.out.println(i);
+						DATA.hasAchievements[2] = true;
+						Game.achievementText = "Gems!";
+					}
+				}
+			}
+		}catch(Exception e){
+			
 		}
 	}
 
@@ -271,6 +352,15 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 
+		Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length(), 2, Color.get(-1, 222, 222, 222));
+        Font.draw(autosaveText, screen, screen.w - 8 * autosaveText.length() - 1, 1, Color.get(-1, 555, 555, 555));
+        
+        if (achievementText != "") {
+	        Font.renderFrame(screen, "Achievement get!", 1, 1, 18, 4);
+	        Font.draw(achievementText, screen, 1+achievementText.length(), 22, Color.get(-1, 222, 222, 222));
+	        Font.draw(achievementText, screen, 1+achievementText.length() - 1, 21, Color.get(-1, 555, 555, 555));
+		}
+        
 		for (int i = 0; i < 10; i++) {
 			if (i < player.health)
 				screen.render(i * 8, screen.h - 16, 0 + 12 * 32, Color.get(000, 200, 500, 533), 0);
@@ -299,7 +389,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void renderFocusNagger() {
-		String msg = "Click to focus!";
+		String msg = "Game Paused";
 		int xx = (WIDTH - msg.length() * 8) / 2;
 		int yy = (HEIGHT - 8) / 2;
 		int w = msg.length();

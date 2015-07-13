@@ -15,6 +15,7 @@ public class Mob extends Entity {
 	public int health = maxHealth;
 	public int swimTimer = 0;
 	public int tickTime = 0;
+	public int lvl;
 
 	public Mob() {
 		x = y = 8;
